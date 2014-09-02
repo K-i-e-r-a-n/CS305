@@ -9,4 +9,4 @@ zip: hw1
 
 .PHONY: clean
 clean:	
-	-rm hw1 main.o
+	-rm hw1 main.o *.zip
