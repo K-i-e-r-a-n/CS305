@@ -42,7 +42,7 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		printf("%d parameters.\n", argc); //print nuber of command line arguments entered.
+		printf("%d parameters.\n", argc); //print number of command line arguments entered.
 		int i = 0; //index for loop.
 		for (i = 1; i < argc; i++) // looping through from the 2nd to the number of arguments.
 		{
