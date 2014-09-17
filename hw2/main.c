@@ -47,6 +47,9 @@ int main (int argc, char * argv[])
 			if (i%2 == 0) //if the index is even, print a newline character after printing the string
 				printf("\n");
 		}
+		if (argc%2 == 0)
+			printf("\n"); //if the number of arguments (excluding the executable) is odd because there would not be a newline otherwise.
 	}
 	return EXIT_SUCCESS; //return success value!
 }
+

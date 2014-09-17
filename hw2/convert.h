@@ -23,3 +23,4 @@ Returns:
 int convertString (char* s);
 
 #endif
+

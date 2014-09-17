@@ -7,7 +7,6 @@
 */
 #include "convert.h"
 
-
 /* convertString:
 If the string passed in the arguments has a even number of characters, it is left unchanged and the function exits with value 0.
 If the string passed has an odd number of characters, it 
@@ -28,3 +27,4 @@ int convertString(char* s)
 		*tempStr = toupper(*tempStr);
 	return 1; //indicates it converted the string to upper case.
 }
+
