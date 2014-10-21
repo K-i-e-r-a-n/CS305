@@ -1,13 +1,10 @@
 /* Filename: main.c
- * Author:   
  * Created by: Tanya L. Crenshaw
- * Date created: 9/29/2014
+ * Modified by: Kieran Losh
+ * Date created: 9/30/2014
+ * Date modified: 10/21/2014
  *
- * Description: This is a small program provided to CS305 students
- *              to get them started on their programming 3 assignment. It
- *              has the following functionality:
- *
- *              1. Open and read from a file passed via command line.
+ * Description: 1. Open and read from a file passed via command line.
  *
  *              2. Take the values from the file and create an access
  *              control list.  
@@ -16,16 +13,9 @@
  *
  *              4. Parse a second file passed via command line.
  *              Execute commands from the file to alter the access
- *              control list created in step 2.  No alterations will
- *              occur as certain functions in aclist.c must be
- *              implemented.
+ *              control list created in step 2. 
  *
  *              5. Print the resulting access control list.
- *
- * Known issues: This program has a memory leak; memory allocated by
- *               malloc is not explicitly freed by the program.
- *               Students are expected to resolve the memory leak
- *               issue by implementing freeACL().
  */
 #include <stdlib.h>
 #include <stdio.h>

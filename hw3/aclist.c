@@ -1,11 +1,10 @@
 /* Filename: aclist.c
- * Author:   
  * Created by: Tanya L. Crenshaw
+ * Modified by: Kieran Losh
  * Date created: 9/30/2014
+ * Date modified: 10/21/2014
  *
- * Description: This file contains a partial implementation of an
- *               access control list data structure.  The functions
- *               implemented are:
+ * Description:  The functions implemented are:
  * 
  *               1. initializeACL(): create the access control list
  *                  node that contains the file name and the pointer
@@ -16,6 +15,14 @@
  *
  *               3. printList(): print the contents of an access
  *               control list.
+ *                
+ *               4. addRight(): Adds a right to an entry
+ *
+ *               5. deleteRight(): Removes a right from an entry
+ *
+ *               6. deleteEntry(): Deletes an entry from the acl
+ *               
+ *               7. freeACL(): Deletes and frees the acl
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -201,15 +208,15 @@ void printACL(AccessControlList * acl)
       while(currentNode != NULL)
     	{
         //formatting fix to make the output neat - the first case should not have a leading comma
-        if (currentNode == acl -> aces)
-        {
-          printf(" %s (", currentNode->user);
-        }
-        else 
-        {
+        // if (currentNode == acl -> aces)
+        // {
+        //   printf(" %s (", currentNode->user);
+        // }
+        // else 
+        // {
           //print the name of the current user with leading comma
-    	    printf(", %s (", currentNode->user);
-        }
+    	  printf(", %s (", currentNode->user);
+        //}
         //array of chars that corresponds to rights. Specifically, for a number of a right, the corresponding character is at position log2(right)
         char* rightChars = "xwro";
         //for loop index
@@ -250,7 +257,7 @@ void printACL(AccessControlList * acl)
 int deleteRight(int right, char * username, AccessControlList * acl)
 {
   //check to make sure the list is populated
-  if (acl == NULL)
+  if (acl == NULL || acl->aces == NULL)
     return LIST_EMPTY_ERROR;
 
   //check to make sure that the right is a valid right
@@ -260,38 +267,118 @@ int deleteRight(int right, char * username, AccessControlList * acl)
 
   //Pointer to the current element. 
   AccessControlEntry* currentNode;
-  //initialize the current node to the first element pointed at by the ACL
-  
+  //boolean-like variable to store whether the user has been found in the list 
+  int userFound = 0; 
   //standard for loop to iterate through the list
   for (currentNode = acl->aces; currentNode != NULL; currentNode = currentNode->next)
   {
     if (strcmp(currentNode->user, username) == 0)
     {
-      currentNode->rights &= ~(right); // ANDing with the inverse of the right removes the right from the bitmask. 
+      userFound = 1;
+      currentNode->rights &= ~(right); // ANDing with the inverse of the right removes the right. 
     }
- }
-
+  }
+  //if the user was not found in the list, return with error code, else return normally
+  if (!userFound)
+    return USER_NOT_FOUND;
+  else 
   return DELETE_RIGHT_SUCCESS;
 
 }
 
 /* Function:    addRight()
  * Parameters:  right, the bit-masked right to add to the user's permissions
-                username, the username of the user whose rights we wish to add to
-                acl, a pointer to the AccessControlList
+ *              username, the username of the user whose rights we wish to add to
+ *              acl, a pointer to the AccessControlList
  * Description: This function adds a specified right to the specified user's bit-masked rights.         
- */
+ */ 
 int addRight(int right, char * username, AccessControlList * acl)
 {
-  return 0;
+  //check to make sure the list is populated
+  if (acl == NULL || acl->aces == NULL)
+    return LIST_EMPTY_ERROR;
+
+  //check to make sure that the right is a valid right
+  if ((right != R_OWN) && (right != R_READ) && (right != R_WRITE) && (right != R_EXECUTE))
+    return ADD_RIGHT_FAILURE;
+
+
+  //Pointer to the current element. 
+  AccessControlEntry* currentNode;
+  //boolean-like variable to store whether the user has been found in the list 
+  int userFound = 0; 
+  //standard for loop to iterate through the list
+  for (currentNode = acl->aces; currentNode != NULL; currentNode = currentNode->next)
+  {
+    if (strcmp(currentNode->user, username) == 0)
+    {
+      userFound = 1;
+      currentNode->rights |= right; //ORing with the right adds the right. 
+    }
+  }
+  //if the user was not found in the list, return with error code, else return normally
+  if (!userFound)
+    return USER_NOT_FOUND;
+  return ADD_RIGHT_SUCCESS;
 }
 
+/* Function:  deleteEntry()
+ * Parameters:  char * username: name of the user who we wish to delete from the access control list
+ *              AccesControlList* acl: Pointer to the acl that we wish to delete the user from
+ * Description: Deletes the entry with the specified user's name. If the specified user cannot be found,
+ *              it returns with USER_NOT_FOUND code. Similarly, if the list head or first element of the 
+ *              is empty, it returns with LIST_EMPTY_ERROR code.
+ */ 
 int deleteEntry(char * username, AccessControlList * acl)
 {
-  return 0;
+  //check to see if the list is empty or the head pointer is null
+  if (acl == NULL || acl->aces == NULL)
+    return LIST_EMPTY_ERROR;
+
+  //double pointer to the element to allow easy deletion
+  AccessControlEntry** ptr = &(acl->aces);
+
+  //boolean-like variable to store whether the user has been found in the list
+  int userFound = 0;
+  //loop to move through the list
+  while (*ptr != NULL)
+  {
+    if (strcmp((*ptr)->user, username) == 0)//check the username of the current element
+    {
+      AccessControlEntry* temp = *ptr; //temp pointer to the element to be deleted
+      *ptr = (*ptr)->next; //set the pointer of the current element to the next element's pointer
+      //free malloc'd memory and in effect delete the element
+      free(temp); 
+      userFound = 1;
+    }
+    ptr = &((*ptr)->next); //point to the next element's pointer
+  }
+  if (!userFound)
+      return USER_NOT_FOUND;
+  return DELETE_ENTRY_SUCCESS;
 }
 
+/* Function:    freeACL()
+ * Parameters:  acl: Pointer to the Access Control List that is to be freed.
+ * Description: Deletes all of the list entries and the list head, and frees
+ *              the memory previously used by them.
+ */ 
 int freeACL(AccessControlList * acl)
 {
-  return 0;
+  //check to make sure that the list is actually populated. If it's already NULL our job is done.
+  if (acl == NULL)
+    return FREE_ACL_SUCCESS;
+
+  //double pointer to the element to allow easy deletion
+  AccessControlEntry** ptr = &(acl->aces);
+  //loop to iterate through the list and delete and free elements
+  while (*ptr != NULL)
+  {
+    AccessControlEntry* temp = *ptr; //temp pointer to the element to be deleted
+    *ptr = (*ptr)->next; //set the pointer of the current element to the next element's pointer
+    //free malloc'd memory and in effect delete the element
+    free(temp);
+  }
+  free(acl); //free the head of the acl
+  return FREE_ACL_SUCCESS;
 }

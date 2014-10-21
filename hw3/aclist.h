@@ -1,7 +1,8 @@
 /* Filename: aclist.h
- * Author:   
  * Created by: Tanya L. Crenshaw
+ * Modified by: Kieran Losh
  * Date created: 9/30/2014
+ * Date modified: 10/21/2014
  */
 
 #ifndef __ACLIST_H__
@@ -21,10 +22,19 @@
 #define R_EXECUTE 1 // Binary = 0b0001
 #define NUMBER_OF_RIGHTS 4 //total size of the bit field that stores the permissions
 
+#define USER_NOT_FOUND (-3)
 #define LIST_EMPTY_ERROR (-2)
+
 #define DELETE_RIGHT_FAILURE (-1)
 #define DELETE_RIGHT_SUCCESS 0
 
+#define ADD_RIGHT_FAILURE (-1)
+#define ADD_RIGHT_SUCCESS 0
+
+#define DELETE_ENTRY_FAILURE (-1)
+#define DELETE_ENTRY_SUCCESS 0
+
+#define FREE_ACL_SUCCESS 0
 
 /* Define the maximum length username and filename.
  */
