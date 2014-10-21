@@ -6,7 +6,6 @@
 
 #ifndef __ACLIST_H__
 #define __ACLIST_H__
-#include <math.h>
 
 #define INITIALIZE_FAILURE (-1)
 #define INITIALIZE_SUCCESS 0
@@ -20,7 +19,12 @@
 #define R_READ 4    // Binary = 0b0100
 #define R_WRITE 2   // Binary = 0b0010
 #define R_EXECUTE 1 // Binary = 0b0001
-#define NUMBER_OF_RIGHTS 4
+#define NUMBER_OF_RIGHTS 4 //total size of the bit field that stores the permissions
+
+#define LIST_EMPTY_ERROR (-2)
+#define DELETE_RIGHT_FAILURE (-1)
+#define DELETE_RIGHT_SUCCESS 0
+
 
 /* Define the maximum length username and filename.
  */

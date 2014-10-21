@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "aclist.h"
 
@@ -248,25 +249,29 @@ void printACL(AccessControlList * acl)
  */
 int deleteRight(int right, char * username, AccessControlList * acl)
 {
+  //check to make sure the list is populated
+  if (acl == NULL)
+    return LIST_EMPTY_ERROR;
+
+  //check to make sure that the right is a valid right
+  if ((right != R_OWN) && (right != R_READ) && (right != R_WRITE) && (right != R_EXECUTE))
+    return DELETE_RIGHT_FAILURE;
+
+
   //Pointer to the current element. 
   AccessControlEntry* currentNode;
   //initialize the current node to the first element pointed at by the ACL
   
   //standard for loop to iterate through the list
-  for (currentNode = acl->aces; currentNode->next != NULL; currentNode = currentNode->next)
+  for (currentNode = acl->aces; currentNode != NULL; currentNode = currentNode->next)
   {
-    if (strcmp(currentNode->user, username) == 0) //check the username
+    if (strcmp(currentNode->user, username) == 0)
     {
-      printf("Removed right (%i) from %s.\n", right, currentNode->user);
       currentNode->rights &= ~(right); // ANDing with the inverse of the right removes the right from the bitmask. 
-    } 
-    else
-    {
-      printf("User incorrect, user is %s.\n", currentNode->user);
     }
-  }
+ }
 
-  return 0;
+  return DELETE_RIGHT_SUCCESS;
 
 }
 
