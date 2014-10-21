@@ -198,17 +198,34 @@ void printACL(AccessControlList * acl)
        * still another element in the list.
        */     
       while(currentNode != NULL)
-	{
+    	{
+        //formatting fix to make the output neat - the first case should not have a leading comma
+        if (currentNode == acl -> aces)
+        {
+          printf(" %s (", currentNode->user);
+        }
+        else 
+        {
+          //print the name of the current user with leading comma
+    	    printf(", %s (", currentNode->user);
+        }
+        //array of chars that corresponds to rights. Specifically, for a number of a right, the corresponding character is at position log2(right)
+        char* rightChars = "xwro";
+        //for loop index
+        int i;
+        //loop through the possible values of permissions, and AND the current permission against the user rights to determine if the user has them
+        for (i = NUMBER_OF_RIGHTS - 1; i >= 0; i--) //loop iterates backwards to print in the standard order (orwx)
+        {
+          //AND user rights with current right (2^i) to determine if the user has that right
+          if (currentNode->rights & (int)(pow(2, i)))
+            //print the letter of the right
+            printf("%c", rightChars[i]);
+        } 
+        printf(")"); //match the parenthesis around the permissions
 
-	  //************************************************************
-	  // CS305 Students must replace the following line of code so
-	  // that this function actually prints the rights oxwr.
-	  printf(", %s (rights)", currentNode->user);
-
-
-	  // Point to the next entry
-	  currentNode = currentNode->next;
-	}
+    	  // Point to the next entry
+    	  currentNode = currentNode->next;
+    	}
     }
 
   else
@@ -223,17 +240,42 @@ void printACL(AccessControlList * acl)
   return;
 }
 
-/* CS305 students must implement the following functions.  Students are
- * responsible for adding comment headers to each function.  Examples
- * of function headers are provided in the functions above.
+/* Function:    deleteRight()
+ * Parameters:  right, the bit-masked right to remove from the user's permissions
+                username, the username of the user whose right we wish to remove
+                acl, a pointer to the AccessControlList
+ * Description: This function removes the specified right from the specified user's bit-masked rights.
  */
-
 int deleteRight(int right, char * username, AccessControlList * acl)
 {
+  //Pointer to the current element. 
+  AccessControlEntry* currentNode;
+  //initialize the current node to the first element pointed at by the ACL
+  
+  //standard for loop to iterate through the list
+  for (currentNode = acl->aces; currentNode->next != NULL; currentNode = currentNode->next)
+  {
+    if (strcmp(currentNode->user, username) == 0) //check the username
+    {
+      printf("Removed right (%i) from %s.\n", right, currentNode->user);
+      currentNode->rights &= ~(right); // ANDing with the inverse of the right removes the right from the bitmask. 
+    } 
+    else
+    {
+      printf("User incorrect, user is %s.\n", currentNode->user);
+    }
+  }
+
   return 0;
 
 }
 
+/* Function:    addRight()
+ * Parameters:  right, the bit-masked right to add to the user's permissions
+                username, the username of the user whose rights we wish to add to
+                acl, a pointer to the AccessControlList
+ * Description: This function adds a specified right to the specified user's bit-masked rights.         
+ */
 int addRight(int right, char * username, AccessControlList * acl)
 {
   return 0;

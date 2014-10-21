@@ -3,17 +3,17 @@ nuxoll
 1
 ar 
 nuxoll
-15
+150
 ar
 nobody
 8
 ar
 vegdahl
-15
+8
 ar
 ec2-user
 2
 ar
 nuxoll
-150
+4
 
