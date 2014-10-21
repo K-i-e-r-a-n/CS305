@@ -207,16 +207,8 @@ void printACL(AccessControlList * acl)
        */     
       while(currentNode != NULL)
     	{
-        //formatting fix to make the output neat - the first case should not have a leading comma
-        // if (currentNode == acl -> aces)
-        // {
-        //   printf(" %s (", currentNode->user);
-        // }
-        // else 
-        // {
-          //print the name of the current user with leading comma
     	  printf(", %s (", currentNode->user);
-        //}
+          
         //array of chars that corresponds to rights. Specifically, for a number of a right, the corresponding character is at position log2(right)
         char* rightChars = "xwro";
         //for loop index
