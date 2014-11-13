@@ -12,11 +12,12 @@
 # CS305 Students do not need to edit this file.
 #
 CC = gcc
+ARGS = -lm 
 OBJS = main.o company.o list.o readLine.o sort.o tree.o
 HEADERS = list.h sort.h readLine.h usage.h tree.h
 
 hw4:	$(OBJS) $(HEADERS)
-	$(CC) -o hw4 $(OBJS)
+	$(CC) -o hw4 $(OBJS) $(ARGS)
 
 main.o:	main.c $(HEADERS)
 	$(CC) -c main.c

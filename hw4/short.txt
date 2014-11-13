@@ -1,14 +1,3 @@
-* Smarsh
-Email archiving and encryption
-http://www.smarsh.com/
-921 SW Washington Street
-Suite 540
-Portland 
-OR  
-97205
-45.521201
--122.680772
-
 * Iovation
 Real-time device reputation and fraud detection
 http://www.iovation.com/
@@ -19,3 +8,14 @@ OR
 97204
 45.522105
 -122.676129
+
+* Smarsh
+Email archiving and encryption
+http://www.smarsh.com/
+921 SW Washington Street
+Suite 540
+Portland 
+OR  
+97205
+45.521201
+-122.680772
