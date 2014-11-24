@@ -26,6 +26,5 @@ typedef int listNodeCompareFcn(listNode * a, listNode * b);
 void mergeSort(listNode ** listPtr, listNodeCompareFcn compare);
 int alphabetCompare(listNode * l1, listNode * l2);
 int distanceCompare(listNode * l1, listNode * l2);
-int listLen(listNode* head);
 
 #endif
