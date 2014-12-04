@@ -6,6 +6,15 @@
 #include "course.h"
 #include "graph.h"
 
+#define UNSEEN 0
+#define IN_PROGRESS 1
+#define FINISHED 2
+
+#define CYCLE_FREE 0
+#define CYCLE 1
+
+#define REDUNDANT 1
+
 // creates a new graph object with no vertices and no edges
 graph* newGraph() {
   graph* rtnVal = malloc(sizeof(graph));
@@ -57,14 +66,63 @@ int linkCourses(graph* graphPtr, char* source, char* target) {
 
 // report number of redundant edges in a graph
 int reportRedundancies(graph* g) {
-  printf("'reportRedundancies' not implemented\n");
+  courseList* ptr;
+  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
+    setMarks(g, 0); //set all marks to zero 
+    if (helpReportRedundancies(ptr) == REDUNDANT){
+      printf("of %s is redundant.\n", ptr->course->name);
+     return REDUNDANT;
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+//helper recursive function for finding redundant prereqs.
+int helpReportRedundancies(courseList* cl){
+  if (cl == NULL)
+    return 0;
+  if (cl->course->mark == 1){
+    printf("Prequesite %s of ", cl->course->name);
+    return REDUNDANT;
+  }
+  cl->course->mark = 1;
+  courseList* ptr;
+  for (ptr = cl->course->preds; ptr != NULL; ptr = ptr->next){
+    if (helpReportRedundancies(ptr) == REDUNDANT){
+      return REDUNDANT;
+    }
+  }
   return 0;
 }
 
 // finds a course in a graph that has a circularity, NULL if none
 course* findCircularity(graph* g) {
-  printf("'findCircularity' not implemented\n");
+  courseList* ptr;
+  //set all marks to 0 (unseen).
+  setMarks(g, UNSEEN);
+
+  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
+    //check if each course has cycles.
+    if (helpFindCircularity(ptr) == CYCLE)
+      return ptr->course;
+  }
   return NULL;
+}
+
+//recursive helper function for findCircularity
+int helpFindCircularity(courseList* c){
+  if (c->course->mark == IN_PROGRESS) //if the mark is in progress, there is a loop
+    return CYCLE;
+  if (c->course->mark == FINISHED) //if the mark is finished, then the node has already been hit previously
+    return CYCLE_FREE;
+  c->course->mark = IN_PROGRESS; //mark that we are currently looking at this node
+  courseList* ptr;
+  for (ptr = c->course->preds; ptr != NULL; ptr = ptr->next){
+    if (helpFindCircularity(ptr) == CYCLE) //if a cycle is found, return 
+      return CYCLE;
+  }
+  c->course->mark = FINISHED;// when recursing through the edges is done, the analysis of the node is done. 
+  return CYCLE_FREE;
 }
 
 
@@ -73,4 +131,20 @@ course* findCircularity(graph* g) {
 // parameters:
 //   - graphRef: pointer to the pointer variable for the graph
 void freeGraph(graph** graphRef) {
+}
+
+//sets all the marks of courses in a graph to the specified value.
+void setMarks(graph* g, int value){
+  courseList* ptr;
+  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
+    ptr->course->mark = value;
+  }
+}
+
+void printMarks(graph* g){
+  courseList* ptr;
+  printf("--------------------\n");
+  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
+    printf("%s: %d\n", ptr->course->name, ptr->course->mark);
+  }
 }

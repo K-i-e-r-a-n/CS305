@@ -1,11 +1,12 @@
 OBJS = main.o course.o graph.o plan.o parse.o
 CC = gcc
 GCC = $(CC)
+FLAGS = -g
 
 all: hw5
 
 hw5: $(OBJS)
-	$(GCC) -o hw5 $(OBJS)
+	$(GCC) $(FLAGS) -o hw5 $(OBJS)
 
 main.o: main.c course.h graph.h plan.h
 	$(GCC) -c main.c

@@ -14,6 +14,8 @@ struct PlanTag {
 
 // prototypes
 extern void analyzePlan(plan* p, graph* g);
+extern course* checkCourse(courseList* c, int m);
+extern course* helpCheckCourse(courseList* c, int m);
 extern plan* newPlan(courseList* list, plan* next);
 extern plan* readPlan(FILE* f, graph* graphPtr);
 extern void freePlan(plan** planRef);
