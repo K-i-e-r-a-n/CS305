@@ -1,0 +1,29 @@
+int newReportRedundancies(graph* g){
+  int rds = 0; // var to keep track of number of redundancies found.
+  courseList* ptr;
+  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
+    setMarks(g, 0);
+    courseList* preds;
+    for (preds = ptr->course->preds; preds != NULL; preds = preds->next)
+      preds->course->mark = 1; //prep for recursion below
+    for (preds = ptr->course->preds; preds != NULL; preds = preds->next){
+      rds += newHelpReportRedundancies(preds, ptr);
+      zeroPrereqs(preds); //this is necessary to make sure that it is only redunancies between the top level of prereqs and lower ones - otherwise two prereqs could require the same prereq, and it is not redundant because each prereq on its own needs it
+    }
+  }
+  return rds;
+}
+
+int newHelpReportRedundancies(courseList* cl, courseList* original){
+  int rds = 0;
+  if (cl->course->mark == 1){
+    printf("Prerequisite %s of %s is redundant.\n", cl->course->name, original->course->name);
+    return 1;
+  }
+  cl->course->mark = 1;
+  courseList* ptr;
+  for (ptr = cl->course->preds; ptr != NULL; ptr = ptr->next){
+    rds += newHelpReportRedundancies(ptr, original);
+  }
+  return rds;
+}

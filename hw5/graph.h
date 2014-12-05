@@ -18,5 +18,4 @@ extern int reportRedundancies(graph* g);
 extern void listAllPrerequisites(graph* g, course* course);
 extern void freeGraph(graph** graphRef);
 extern void setMarks(graph* g, int mark);
-extern void printMarks(graph* g);
 #endif

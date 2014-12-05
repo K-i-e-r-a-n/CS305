@@ -64,13 +64,15 @@ int linkCourses(graph* graphPtr, char* source, char* target) {
   return 1;
 }
 
+
+
 // report number of redundant edges in a graph
 int reportRedundancies(graph* g) {
   courseList* ptr;
   for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
     setMarks(g, 0); //set all marks to zero 
     if (helpReportRedundancies(ptr) == REDUNDANT){
-      printf("of %s is redundant.\n", ptr->course->name);
+      printf("%s is redundant.\n", ptr->course->name);
      return REDUNDANT;
     }
   }
