@@ -93,11 +93,12 @@ void analyzePlan(plan* p, graph* g) {
     problems = false;
     courseList* cl;
     for (cl = ptr->list; cl != NULL; cl = cl->next){
-      if (cl->course->mark != mark){ //duplicate schedulings
+      if (cl->course->mark != mark){ //check for duplicate schedulings
         printf("Term %d: %s is in the schedule more than once.\n", mark, cl->course->name);
+        cl->course->mark = mark; //set it so that it is caught in the other terms as well
         problems = true; 
       }
-      cl->course->mark = mark; //set it so that it is caught in the other terms as well
+      
       course* temp;
       if (temp = checkCourse(cl, mark)){//check for missing prereqs. If none are found, checkCourse returns NULL, and the if statement is false.
         printf("Term %d: %s scheduled without prerequisite %s.\n", mark,  cl->course->name, temp->name);
@@ -138,4 +139,11 @@ course* helpCheckCourse(courseList* c, int m){
 // parameters:
 //   - planRef: pointer to the pointer variable for the plan
 void freePlan(plan** planRef) {
+  plan** ptr = planRef;
+  while (*ptr != NULL){
+    plan* temp = *ptr; //save copy to delete
+    *ptr = (*ptr)->next; //iterate pointer
+    free(temp); //delete element
+  }
+  *planRef = NULL;
 }

@@ -131,6 +131,14 @@ int helpFindCircularity(courseList* c){
 // parameters:
 //   - graphRef: pointer to the pointer variable for the graph
 void freeGraph(graph** graphRef) {
+    courseList** ptr = &((*graphRef)->courses);
+  while (*ptr != NULL){
+    courseList* temp = *ptr; //save copy to delete
+    *ptr = (*ptr)->next; //iterate pointer
+    free(temp->course);//free course
+    free(temp); //delete element
+  }
+  *graphRef = NULL;
 }
 
 //sets all the marks of courses in a graph to the specified value.
@@ -138,13 +146,5 @@ void setMarks(graph* g, int value){
   courseList* ptr;
   for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
     ptr->course->mark = value;
-  }
-}
-
-void printMarks(graph* g){
-  courseList* ptr;
-  printf("--------------------\n");
-  for (ptr = g->courses; ptr != NULL; ptr = ptr->next){
-    printf("%s: %d\n", ptr->course->name, ptr->course->mark);
   }
 }
